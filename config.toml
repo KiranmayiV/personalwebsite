@@ -1,6 +1,6 @@
-baseurl = "https://username.github.io"
+baseurl = "https://warm-stroopwafel-d582e1.netlify.app/"
 DefaultContentLanguage = "en"
-title = "Kiranmayi Vadlamudi"
+title = "Data Viz & Maps"
 theme = "beautifulhugo"
 pygmentsStyle = "trac"
 pygmentsUseClasses = true
@@ -12,11 +12,11 @@ pygmentsCodefencesGuessSyntax = true
 #googleAnalytics = "XXX"
 
 [Params]
-#  homeTitle = "Beautiful Hugo Theme" # Set a different text for the header on the home page
+  homeTitle = "Kiranmayi Vadlamudi" # Set a different text for the header on the home page
   subtitle = "GEOSPATIAL DATA | MAPS | DATA VISUALISATION"
   mainSections = ["post","posts"]
-  logo = "img/yuki2.png" # Expecting square dimensions
-  favicon = "img/yuki-favicon.ico"
+  logo = "logo.png" # Expecting square dimensions
+  favicon = "favicon.ico"
   dateFormat = "January 2, 2006"
   commit = false
   rss = true
@@ -112,3 +112,8 @@ pygmentsCodefencesGuessSyntax = true
     name = "Tags"
     url = "tags"
     weight = 3
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
