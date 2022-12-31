@@ -15,7 +15,6 @@ image: 'featured-hugo.png'
 bigimg: [{src: "featured-hugo.png", desc: "Beautiful Hugo Theme"}] 
 
 **updated: 2022-12-31**
---->
 [Getting Started](#Getting-Started)
 - [Choice of Hugo Theme](#Choice-of-Hugo-theme)
 
@@ -36,6 +35,8 @@ bigimg: [{src: "featured-hugo.png", desc: "Beautiful Hugo Theme"}]
 - [Hosting your website](#Hosting-your-website)
 
 [Resources](#Resources)
+
+--->
  
 
 After several years trials and errors of building my website with wix, notion, jekyll-git pages, I have decided to give R blogdown-Hugo a try. The search for the right combination of tools that help you write and execute your code, produce dynamic visualizations and embed widgets is like searching for liquid gold. Nevertheless so far R blogdown-Hugo has been the most seamless way of building and pushing content to a website without having to learn too much of HTML and CSS.
@@ -242,4 +243,4 @@ The last part is to head to [Netlify](https://www.netlify.com/?utm_source=google
 1. [Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/)
 2. [Up & running with blogdown in 2021 by Allison Hill](https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/#welcome)
 3. [Setting up this website by Monica Thieu](https://www.monicathieu.com/posts/2020-08-10-setting-up-this-website/)
-
+4. [Blogging with Hugo by Justin James](https://digitaldrummerj.me/series/blogging-with-hugo/)
