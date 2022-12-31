@@ -1,4 +1,4 @@
-baseurl = "https://mapvizhardry.netlify.app/"
+baseurl = "https://mapvizardry.netlify.app/"
 DefaultContentLanguage = "en"
 title = "Maps & Data Vizardry"
 theme = "beautifulhugo"
