@@ -1,6 +1,6 @@
-baseurl = "https://warm-stroopwafel-d582e1.netlify.app/"
+baseurl = "https://mapvizhardry.netlify.app/"
 DefaultContentLanguage = "en"
-title = "Data Viz & Maps"
+title = "Maps & Data Vizardry"
 theme = "beautifulhugo"
 pygmentsStyle = "trac"
 pygmentsUseClasses = true
@@ -30,9 +30,13 @@ pygmentsCodefencesGuessSyntax = true
 #  hideAuthor = true
 #  gcse = "012345678901234567890:abcdefghijk" # Get your code from google.com/cse. Make sure to go to "Look and Feel" and change Layout to "Full Width" and Theme to "Classic"
 
-#[[Params.bigimg]]
-#  src = "img/triangle.jpg"
-#  desc = "Triangle"
+
+#{src: "/img/triangle.jpg", desc: "Triangle"}
+# {src: "/img/sphere.jpg", desc: "Sphere"}
+# {src: "/img/hexagon.jpg", desc: "Hexagon"}
+[[Params.bigimg]]
+  src = "sea.jpg"
+  desc = "Kiama Beach, NSW"
 #[[Params.bigimg]]
 #  src = "img/sphere.jpg"
 #  desc = "Sphere"
@@ -41,6 +45,9 @@ pygmentsCodefencesGuessSyntax = true
 #[[Params.bigimg]]
 #  src = "img/hexagon.jpg"
 #  desc = "Hexagon"
+
+
+ 
 
 [Author]
   # Set only your "username" for default hosts and full URLs otherwise (e.g., "https://MyGitLab.org/username")
@@ -87,7 +94,7 @@ pygmentsCodefencesGuessSyntax = true
 
 [[menu.main]]
     identifier = "samples"
-    name = "Samples"
+    name = "Portfolio"
     weight = 2
 
 [[menu.main]]
