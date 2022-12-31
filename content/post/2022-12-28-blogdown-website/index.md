@@ -14,7 +14,7 @@ image: 'featured-hugo.png'
 <!---
 bigimg: [{src: "featured-hugo.png", desc: "Beautiful Hugo Theme"}] 
 
-**updated: 2022-12-31** --->
+**updated: 2022-12-31**
 
 [Getting Started](#Getting-Started)
 - [Choice of Hugo Theme](#Choice-of-Hugo-theme)
@@ -36,7 +36,7 @@ bigimg: [{src: "featured-hugo.png", desc: "Beautiful Hugo Theme"}]
 - [Hosting your website](#Hosting-your-website)
 
 [Resources](#Resources)
-
+ --->
 
 After several years trials and errors of building my website with wix, notion, jekyll-git pages, I have decided to give R blogdown-Hugo a try. The search for the right combination of tools that help you write and execute your code, produce dynamic visualizations and embed widgets is like searching for liquid gold. Nevertheless so far R blogdown-Hugo has been the most seamless way of building and pushing content to a website without having to learn too much of HTML and CSS.
 
