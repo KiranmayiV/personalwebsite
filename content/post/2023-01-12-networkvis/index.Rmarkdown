@@ -1,0 +1,206 @@
+---
+title: Network Visualisation with visNetwork
+date: '2023-01-12'
+slug: []
+categories: []
+tags: [R, visNetwork, igraph]
+type: ''
+subtitle: ''
+image: ''
+---
+
+![](featured.png)
+
+## Project context & Data
+
+This visualisation was built as part of a project on network analysis in 2018 in collaboration with [SwissContact](https://www.swisscontact.org/en/about-us) and University of Sydney. The network data is sourced and owned by SwissContact. The data represents men and women cocoa farmers from Indonesia and the existing social network between them, how long they knew each other and how they come to meet each other along with Swiss Contact experts. The network visualisation was therefore build to capture this relationship between them and explore the network properties.
+
+## Visual
+
+I used ```visNetwork``` and ```igraph``` to work with the network data in R. ```visNetwork``` is a R package for network visualisation based on [vis.js](https://visjs.org/) javascript library. ```igraph``` is a collection of network analysis tools available across R, Python, C/C++ and Mathematica. Some nework properties such as degree, centrality were computed using ```igraph``` which were than translated into visual features. 
+
+The visual below also has an in-built spring algorithm which enables the icons to recoil and vibrate back and forth like a spring - try pulling one of the icons! You can also selectively highlight parts of the network by clicking on the icon (or node) of interest and all connected edges and nodes will get highlighted. You can also zoom in, zoom out and drag it around to change focus.
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+install.packages("visNetwork", repos = "
+https://cran.csiro.au/")
+install.packages("plyr",repos = "
+https://cran.csiro.au/")
+install.packages("igraph",repos = "
+https://cran.csiro.au/")
+install.packages("widgetframe" , repos = "https://cran.csiro.au/")
+library(visNetwork)
+library(plyr)
+library(igraph)
+library(widgetframe)
+```
+
+```{r data, echo=FALSE, results='hide'}
+infoedgelist = read.csv(file = '/Users/kiran/Dropbox/CSYS5050 and CSYS5051/originals/Pilotedgelist2anonymous.csv')
+```
+
+```{r clean-data, echo=FALSE, results='hide'}
+## part 1 (CHpeople_ID)----
+infoedgelist$PeopleStatus_TF <-
+  (infoedgelist$PeopleStatus == 'Registered in CocoaTrace')
+
+#taking only the people with ID's and genders and registered in CH
+CHpeople_ID = infoedgelist[which(infoedgelist$PeopleStatus_TF == TRUE), ] #people 'registered in Cocoa Trace'
+
+
+
+## part2 (colnames)----
+colnames(CHpeople_ID)[16] = 'Years Known'
+colnames(CHpeople_ID)[9] = 'Relative'
+colnames(CHpeople_ID)[10] = 'Farmer group'
+colnames(CHpeople_ID)[11] = 'Govt Inst'
+colnames(CHpeople_ID)[13] = 'Neighbhour'
+
+CHpeople_ID$Relative_TF <- CHpeople_ID$Relative == '1 - Yes'
+CHpeople_ID$`Farmer group_TF` <- CHpeople_ID$`Farmer group` == '1 - Yes'
+CHpeople_ID$`Govt Inst_TF` <- CHpeople_ID$`Govt Inst` == '1 - Yes'
+CHpeople_ID$`Neighbhour_TF` <- CHpeople_ID$Neighbhour == '1 - Yes'
+CHpeople_ID$`SCPP_TF` <- CHpeople_ID$Relation...Know.meet.during.the.training.SCPP == '1 - Yes'
+
+ #removing years 2013 and 2015 years known
+CHpeople_ID[which(CHpeople_ID$`Years Known` == 2013.0), 16] <-
+  (2018 - 2013)
+CHpeople_ID[which(CHpeople_ID$`Years Known` == 2015.0), 16]  <-
+  (2018 - 2015)
+
+
+## part 3 (peopleGender)----
+#gender of PeopleFarmerID
+CHpeople_ID$PeopleGender_TF <- CHpeople_ID$PeopleGender == '-'
+#nogender
+nogender = CHpeople_ID[which(CHpeople_ID$PeopleGender_TF == TRUE),] #includes NA values 
+nogender$PeopleGender = 'nogender'
+nogender$Gender <- nogender$Gender == '1 - Male'
+gendfile1 = subset(nogender, select = c(FarmerID, Gender))
+gendfile2 = subset(nogender, select = c(PeopleFarmerID, PeopleGender), is.na(PeopleFarmerID)==F)
+colnames(gendfile2)[1] = 'FarmerID'
+colnames(gendfile2)[2]= 'Gender'
+gendfile_nogender = rbind(gendfile1, gendfile2)
+
+#gendered people farmer ID's
+gendered= CHpeople_ID[which(CHpeople_ID$PeopleGender_TF == FALSE),]
+gendered$Gender <- gendered$Gender == '1 - Male'
+gendered$PeopleGender <- gendered$PeopleGender == '1 - Male'
+gendfile1 = subset(gendered, select = c(FarmerID, Gender))
+gendfile2 = subset(gendered, select = c(PeopleFarmerID, PeopleGender))
+colnames(gendfile2)[1] = 'FarmerID'
+colnames(gendfile2)[2]= 'Gender'
+gendfile_gendered = rbind(gendfile1, gendfile2)
+gendfilesum = rbind(gendfile_gendered, gendfile_nogender)
+gendfilesum = unique(gendfilesum)
+colnames(gendfilesum)[1] = 'allids'
+
+```
+
+```{r , echo=FALSE, results='hide'}
+# creating ipgrah----
+yearsedgelist = subset(
+  CHpeople_ID,
+  select = c(
+    FarmerID,
+    PeopleFarmerID,
+    Relative_TF,
+    `Farmer group_TF`,
+    `Govt Inst_TF`,
+    Neighbhour_TF,
+    SCPP_TF,
+    `Years Known`
+  ),
+  is.na(PeopleFarmerID) == FALSE
+)
+
+#
+yinfo = graph.data.frame(yearsedgelist)
+yinfo <-simplify(yinfo, remove.multiple = TRUE, edge.attr.comb = mean)
+
+#vertex - gender attributes
+V(yinfo)$gender = gendfilesum$Gender[match(V(yinfo)$name,gendfilesum$allids)]
+V(yinfo)$node.color=V(yinfo)$gender #assign the "Sex" attribute as the vertex color
+V(yinfo)$node.color=gsub('FALSE',"hotpink",V(yinfo)$node.color) #Females will be red
+V(yinfo)$node.color=gsub('TRUE',"navy",V(yinfo)$node.color) #Males will be blue
+V(yinfo)$node.color = gsub('nogender', "black", V(yinfo)$node.color)
+
+#degree atrribute
+indeg<-degree(yinfo, mode = "in") #summary(indeg)
+odeg<-degree(yinfo, mode = "out") #summary(odeg)
+cc<-transitivity(yinfo, type = "localundirected")
+
+V(yinfo)$indeg<-indeg
+V(yinfo)$outdeg <-odeg
+V(yinfo)$cc <- cc
+yinfovis = toVisNetworkData(yinfo, idToLabel = TRUE)
+
+
+v = c(unique(yearsedgelist$FarmerID),
+      unique(yearsedgelist$PeopleFarmerID))
+v = unique(v)
+vis.nodes = data.frame(id = v)
+vis.nodes$size = sqrt(yinfovis$nodes$indeg) + 30
+vis.nodes$color.background = c("violetred", "royalblue", "slategrey")[V(yinfo)$gender]
+vis.nodes$color.background = V(yinfo)$gender #assign the "Sex" attribute as the vertex color
+vis.nodes$color.background = gsub('FALSE', "violetred", vis.nodes$color.background) #Females will be red
+vis.nodes$color.background = gsub('TRUE', "royalblue", vis.nodes$color.background) #Males will be blue
+vis.nodes$color.background = gsub('nogender', "slategrey", vis.nodes$color.background)
+vis.nodes$group = V(yinfo)$gender
+vis.nodes$group[vis.nodes$group == 'TRUE'] = 'Male'
+vis.nodes[grep('FALSE', vis.nodes$group, fixed = TRUE), ]$group = 'Female'
+vis.nodes$color.border <- "black"
+vis.nodes$size = sqrt(yinfovis$nodes$indeg) + 15
+vis.nodes$color.highlight.background <- "orange"
+vis.nodes$color.highlight.border <- "darkred"
+
+      
+
+vis.links = data.frame(from = yearsedgelist$FarmerID, to = yearsedgelist$PeopleFarmerID)
+vis.links$Relative = yearsedgelist$Relative_TF
+vis.links$Farmergroup = yearsedgelist$`Farmer group_TF`
+vis.links$GovtInst = yearsedgelist$`Govt Inst_TF`
+vis.links$Neighbhour = yearsedgelist$Neighbhour_TF
+vis.links$SCPP = yearsedgelist$SCPP_TF
+vis.links$Years = yearsedgelist$`Years Known`
+
+vis.links$color[vis.links$Relative == TRUE] = 'red'
+vis.links$color[vis.links$Relative == FALSE] = 'black'
+vis.links$color[vis.links$Farmergroup == TRUE] = 'seagreen'
+vis.links$color[vis.links$GovtInst == TRUE]  = 'maroon'
+vis.links$color[vis.links$Neighbhour == TRUE] = 'tan'
+vis.links$color[vis.links$SCPP == TRUE] = 'purple'
+vis.links$shadow <- FALSE
+vis.links$width = vis.links$Years / 2
+
+
+addNodes <-data.frame(
+                    label = c("Male", "Female", "nogender"),
+                    shape = "icon",
+                    icon.code = "f007",
+                    icon.size = 25,
+                    icon.color = c("royalblue", "violetred", "slategrey")
+                  )
+addEdges <-data.frame(
+  color = c("red", "seagreen", "maroon", "tan", "purple", "black"),
+  label = c("Relative","Farmer Group","Govt Inst",
+            "Neighbhour","SCPP","none of the above"),
+  font.align = "top")
+```
+```{r interactiveVis, echo=FALSE}
+
+
+network = visNetwork(vis.nodes, vis.links)%>% visEdges(arrows = 'to') %>%
+  visGroups(groupname = "Male", shape = "icon", 
+            icon = list(code = "f007", color ="royalblue", size=100)) |> 
+  visGroups(groupname = "Female", shape = "icon",
+            icon = list(code = "f007", color ="violetred", size=100)) |> 
+  visGroups(groupname = "nogender", shape = "icon",
+            icon = list(code = "f007", color ="slategrey", size=100)) |> 
+  addFontAwesome() %>% 
+  visOptions(highlightNearest = list(enabled = TRUE, algorithm = 'all')) %>% 
+  visLegend(addNodes = addNodes, addEdges = addEdges,useGroups = FALSE)
+
+frameWidget(network, height = 600, width = '100%')
+```
+

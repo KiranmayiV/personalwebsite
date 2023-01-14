@@ -1,0 +1,22 @@
+{{ if .Params.series }}
+{{- with index (.GetTerms "series") 0 -}}
+<div class="notice--info">
+    <p>This post is part of the <a href="{{ .Permalink }}" style="font-weight: bold">{{ .LinkTitle }}</a> series.</p>
+    <ul class="list-group">
+        {{ range $num,$post := (index .Site.Taxonomies.series (index .Params.series 0 | urlize)).Pages.ByDate }}
+            {{ if eq $post.Permalink $.Page.Permalink }}
+                <li class="list-group-item active">
+                    Part {{ add $num 1 }}: {{ $post.Params.title}}
+                </li>
+            {{ else }}
+                <li class="list-group-item">
+                    <a href="{{$post.Permalink}}">
+                        Part {{ add $num 1 }}: {{ $post.Params.title}}
+                    </a>
+                </li>
+            {{end}}
+        {{end}}
+    </ul>
+</div>
+{{end}}
+{{end}}

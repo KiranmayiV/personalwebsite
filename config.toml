@@ -1,6 +1,6 @@
 baseurl = "https://mapvizardry.netlify.app/"
 DefaultContentLanguage = "en"
-title = "Maps & Data Vizardry"
+title = "Maps & Data Visualisation"
 theme = "beautifulhugo"
 pygmentsStyle = "trac"
 pygmentsUseClasses = true
@@ -8,7 +8,7 @@ pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
 #pygmentsUseClassic = true
 #pygmentOptions = "linenos=inline"
-#disqusShortname = "XXX"
+#disqusShortname = "https-mapvizardry-netlify-app"
 #googleAnalytics = "XXX"
 
 [Params]
@@ -35,8 +35,8 @@ pygmentsCodefencesGuessSyntax = true
 # {src: "/img/sphere.jpg", desc: "Sphere"}
 # {src: "/img/hexagon.jpg", desc: "Hexagon"}
 [[Params.bigimg]]
-  src = "sea.jpg"
-  desc = "Kiama Beach, NSW"
+  src = "background.jpg"
+#  desc = "Kerela"
 #[[Params.bigimg]]
 #  src = "img/sphere.jpg"
 #  desc = "Sphere"
@@ -99,8 +99,8 @@ pygmentsCodefencesGuessSyntax = true
 
 [[menu.main]]
     parent = "samples"
-    name = "Big Image Sample"
-    url = "post/2017-03-07-bigimg-sample"
+    name = "Network Visualisation"
+    url = "post/2023-01-12-networkvis"
     weight = 1
 
 [[menu.main]]
@@ -124,3 +124,6 @@ pygmentsCodefencesGuessSyntax = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[taxonomies]
+   series = "series"
